@@ -390,3 +390,14 @@ def convert_single_pdf(pdf_path: Path, output_root: Path) -> None:
 def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
+
+
+def read_input_file(file_path: str, last_position: int = 0):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return f.readlines()[last_position:]
+
+
+def append_to_json(filename, item):
+    with open(filename, 'a', encoding='utf-8') as file:
+        json_string = json.dumps(item, ensure_ascii=False)
+        file.write(json_string + '\n')
