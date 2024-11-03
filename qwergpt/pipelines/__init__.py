@@ -3,12 +3,14 @@ from .base import (
     Pipeline,
     PipelineData,
     PipelineStatus,
-    PipelineComponent
+    PipelineComponent,
 )
+from .server import PipelineWebSocketServer
 
 __all__ = [
     'Pipeline',
     'PipelineData',
     'PipelineStatus',
     'PipelineComponent',
+    'PipelineWebSocketServer',
 ]

@@ -27,6 +27,17 @@ class PipelineData:
     def set_meta(self, key: str, value: Any) -> None:
         self.metadata[key] = value
 
+    def debug(self, separator: str = " = ") -> str:
+        output = ["Pipeline Data:"]
+        for k, v in self.data.items():
+            output.append(f"  {k}{separator}{v}")
+            
+        output.append("\nPipeline Metadata:")
+        for k, v in self.metadata.items():
+            output.append(f"  {k}{separator}{v}")
+            
+        return "\n".join(output)
+
 
 class PipelineComponent(ABC):
     """Base interface that all pipeline components must implement"""
