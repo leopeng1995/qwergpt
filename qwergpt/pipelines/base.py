@@ -8,9 +8,7 @@ from typing import Dict, Any, Set, Callable, List
 
 @dataclass
 class PipelineData:
-    """统一的Pipeline数据结构"""
     data: Dict[str, Any]
-    metadata: Dict[str, Any]
     
     def get(self, key: str, default: Any = None) -> Any:
         return self.data.get(key, default)
@@ -20,20 +18,13 @@ class PipelineData:
         
     def update(self, data: Dict[str, Any]) -> None:
         self.data.update(data)
-        
-    def get_meta(self, key: str, default: Any = None) -> Any:
-        return self.metadata.get(key, default)
-    
-    def set_meta(self, key: str, value: Any) -> None:
-        self.metadata[key] = value
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self.data
 
     def debug(self, separator: str = " = ") -> str:
         output = ["Pipeline Data:"]
         for k, v in self.data.items():
-            output.append(f"  {k}{separator}{v}")
-            
-        output.append("\nPipeline Metadata:")
-        for k, v in self.metadata.items():
             output.append(f"  {k}{separator}{v}")
             
         return "\n".join(output)
@@ -59,45 +50,45 @@ class Pipeline(ABC):
         self.id = pipeline_id
         self.status = PipelineStatus.INIT
         self.components: List[dict] = []
-        self._observers: Set[Callable] = set()
-        self._ws_server = None
-        self._component_order = 0
+        self.observers: Set[Callable] = set()
+        self.ws_server = None
+        self.pipeline_data = None
     
     def set_ws_server(self, ws_server):
-        self._ws_server = ws_server
+        self.ws_server = ws_server
     
     def add_observer(self, callback: Callable):
-        self._observers.add(callback)
+        self.observers.add(callback)
     
     def remove_observer(self, callback: Callable):
-        self._observers.discard(callback)
+        self.observers.discard(callback)
     
-    def _notify_observers(self):
+    def notify_observers(self):
         status_data = {
             'pipeline_id': self.id,
             'status': self.status.value,
-            'components': self.components
+            'components': self.components,
+            'pipeline_data': self.pipeline_data.to_dict() if self.pipeline_data else {}
         }
-        print(status_data)
-        status_json = json.dumps(status_data)
+        status_json = json.dumps(status_data, ensure_ascii=False)
         
-        for callback in self._observers:
+        for callback in self.observers:
             callback(status_json)
         
-        if self._ws_server and self.id:
-            asyncio.create_task(self._ws_server.notify_pipeline_status(self.id, status_json))
+        if self.ws_server and self.id:
+            asyncio.create_task(self.ws_server.notify_pipeline_status(self.id, status_json))
     
     async def start(self, *args, **kwargs) -> Any:
         self.status = PipelineStatus.RUNNING
-        self._notify_observers()
+        self.notify_observers()
         try:
             result = await self.run(*args, **kwargs)
             self.status = PipelineStatus.COMPLETED
-            self._notify_observers()
+            self.notify_observers()
             return result
         except Exception as e:
             self.status = PipelineStatus.ERROR
-            self._notify_observers()
+            self.notify_observers()
             raise e
     
     async def pause(self):
@@ -108,13 +99,12 @@ class Pipeline(ABC):
         if self.status == PipelineStatus.PAUSED:
             self.status = PipelineStatus.RUNNING
     
-    def log_component_metrics(self, component_name: str, input_data: Any, output_data: Any, execution_time: float):
+    def log_component_metrics(self, component_name: str, execution_time: float):
         component = {
             'name': component_name,
-            'order': self._component_order
+            'execution_time': execution_time
         }
         self.components.append(component)
-        self._component_order += 1
 
     @abstractmethod
     async def run(self, *args, **kwargs) -> Any:
