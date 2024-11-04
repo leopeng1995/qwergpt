@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 
+from qwergpt.pipelines.base import PipelineComponent
 from qwergpt.llm import (
     ZhipuLLM,
     DeepSeekLLM,
 )
 
 
-class BaseRewriter(ABC):
+class BaseRewriter(PipelineComponent):
     def __init__(self, model_name: str = 'glm-4-air'):
         self._llm = ZhipuLLM(model_name=model_name)
 

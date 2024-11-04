@@ -21,6 +21,7 @@ from qwergpt.utils import (
     parse_code,
     should_retry,
 )
+from qwergpt.pipelines import PipelineComponent
 
 
 class Plan(ABC):
@@ -62,17 +63,9 @@ class Plan(ABC):
         return self._finished_tasks
 
 
-class BasePlanner(ABC):
+class BasePlanner(PipelineComponent):
     def __init__(self, model_name: str = 'glm-4-air'):
         self._llm: ZhipuLLM = ZhipuLLM(model_name=model_name)
-
-    @abstractmethod
-    async def run(self, question: str, database_schema: str, filtered_tables: List, tools_desc: str) -> Plan:
-        pass
-
-    @abstractmethod
-    async def rerun(self, question: str, database_schema: str, filtered_tables: List, tools_desc: str, last_plan: Plan) -> Plan:
-        pass
 
     @retry(stop=stop_after_attempt(3), retry=retry_if_exception(should_retry))
     async def _get_instruction(self, messages: List[Message]) -> str:
