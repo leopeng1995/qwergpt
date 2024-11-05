@@ -1,4 +1,3 @@
-
 from .base import (
     Pipeline,
     PipelineData,
@@ -6,6 +5,7 @@ from .base import (
     PipelineComponent,
 )
 from .server import PipelineWebSocketServer
+
 
 __all__ = [
     'Pipeline',
