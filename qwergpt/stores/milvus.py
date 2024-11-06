@@ -1,24 +1,25 @@
 from typing import List, Dict
 
-from pymilvus import model
 from pymilvus import MilvusClient
 
+from qwergpt.embedders import Embedder
 from .base import VectorStore
 
 
 class MilvusVectorStore(VectorStore):
-    def __init__(self, db_path: str, collection_name: str, dimension: int = 768):
+    def __init__(self, db_path: str, collection_name: str, 
+                 embedder: Embedder, dimension: int = 768):
         """Initialize MilvusVectorStore
         
         Args:
-            db_path: Milvus database path
+            db_path: Milvus database path 
             collection_name: Name of the collection
+            embedder: Embedder instance to generate vectors
             dimension: Vector dimension, defaults to 768
         """
+        super().__init__(embedder, dimension)
         self.client = MilvusClient(db_path)
         self.collection_name = collection_name
-        self.dimension = dimension 
-        self.embedding_fn = model.DefaultEmbeddingFunction()
         
         # Initialize collection
         self._init_collection()
@@ -43,7 +44,8 @@ class MilvusVectorStore(VectorStore):
         Returns:
             Insert result from Milvus
         """
-        vectors = self.embedding_fn.encode_documents(texts)
+        # Generate vectors using embedder
+        vectors = [self.embedder.embed(text) for text in texts]
         
         if metadata is None:
             metadata = [{"subject": "default"} for _ in texts]
@@ -51,7 +53,7 @@ class MilvusVectorStore(VectorStore):
         data = [
             {
                 "id": i,
-                "vector": vectors[i], 
+                "vector": vectors[i],
                 "text": texts[i],
                 **metadata[i]
             }
@@ -73,7 +75,7 @@ class MilvusVectorStore(VectorStore):
         Returns:
             List of search results
         """
-        query_vector = self.embedding_fn.encode_documents([query])[0]
+        query_vector = self.embedder.embed(query)
         
         return self.client.search(
             collection_name=self.collection_name,

@@ -1,9 +1,21 @@
 from typing import List, Dict
 from abc import ABC, abstractmethod
 
+from qwergpt.embedders import Embedder
+
 
 class VectorStore(ABC):
     """Abstract base class for vector stores"""
+
+    def __init__(self, embedder: Embedder, dimension: int = 768):
+        """Initialize VectorStore
+        
+        Args:
+            embedder: Embedder instance to generate vectors
+            dimension: Vector dimension, defaults to 768
+        """
+        self.embedder = embedder
+        self.dimension = dimension
     
     @abstractmethod
     def add_texts(self, texts: List[str], metadata: List[Dict] = None) -> Dict:
