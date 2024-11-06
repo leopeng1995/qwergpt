@@ -1,6 +1,12 @@
 # QwerGPT
 
-A Lightweight LLM Framework
+A Lightweight Framework for building LLM applications.
+
+### Roadmap
+
+* Observability
+* Prompt Versioning
+* Easily Evaluating
 
 ### Quick Start
 
