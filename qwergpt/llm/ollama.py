@@ -11,6 +11,7 @@ import requests
 
 from qwergpt.schema import Message
 from qwergpt.llm.base import LLM
+from qwergpt.llm.errors import LLMAPIUnknownError
 
 
 class OllamaLLM(LLM):
@@ -52,6 +53,8 @@ class OllamaLLM(LLM):
 
         response = requests.post(self.base_url, headers=headers, json=data)
         res = response.json()
+        if 'error' in res:
+            raise LLMAPIUnknownError(res['error'])
 
         content = res['response']
         return Message(role='assistant', content=content)
@@ -66,6 +69,9 @@ class OllamaLLM(LLM):
                 timeout = aiohttp.ClientTimeout()
                 async with session.post(self.base_url, headers=headers, json=data, timeout=timeout) as response:
                     res = await response.json()
+
+                if 'error' in res:
+                    raise LLMAPIUnknownError(res['error'])
 
                 content = res['response']
                 return Message(role='assistant', content=content)
