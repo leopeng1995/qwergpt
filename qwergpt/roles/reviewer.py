@@ -6,7 +6,7 @@ from tenacity import (
     retry_if_exception
 )
 
-from qwergpt.llm import (
+from qwergpt.llms import (
     ZhipuLLM,
     DeepSeekLLM,
 )

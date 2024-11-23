@@ -11,7 +11,7 @@ import asyncio
 import requests
 
 from qwergpt.schema import Message, ToolDef
-from qwergpt.llm.base import LLM
+from qwergpt.llms.base import LLM
 
 
 class DeepSeekLLM(LLM):

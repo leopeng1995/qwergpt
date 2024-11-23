@@ -5,7 +5,7 @@ from .base import Embedder
 
 
 class ZhipuEmbedder(Embedder):
-    def __init__(self, api_key: str, model: str = "embedding-3"):
+    def __init__(self, api_key: str, model: str = "embedding-3", dimensions: int = 2048):
         """
         初始化智谱Embedder
         
@@ -20,6 +20,7 @@ class ZhipuEmbedder(Embedder):
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
+        self.dimensions = dimensions
 
     def embed(self, text: str) -> np.ndarray:
         """
@@ -34,7 +35,7 @@ class ZhipuEmbedder(Embedder):
         payload = {
             "model": self.model,
             "input": text,
-            "dimensions": 2048
+            "dimensions": self.dimensions
         }
         
         try:

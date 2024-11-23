@@ -10,7 +10,7 @@ from tqdm import tqdm
 from pdf2image import convert_from_path
 
 from qwergpt.logs import logger
-from qwergpt.llm.errors import LLMBalanceDepletionError
+from qwergpt.llms.errors import LLMBalanceDepletionError
 from asyncio.exceptions import CancelledError, TimeoutError
 
 

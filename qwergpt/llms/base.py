@@ -2,7 +2,7 @@ from abc import ABC
 from typing import List
 
 from qwergpt.schema import Message
-from qwergpt.llm.token_counter import TokenCounter
+from qwergpt.llms.token_counter import TokenCounter
 
 
 class LLM(ABC):

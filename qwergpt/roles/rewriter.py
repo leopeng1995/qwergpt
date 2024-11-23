@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from qwergpt.pipelines.base import PipelineComponent
-from qwergpt.llm import (
+from qwergpt.llms import (
     ZhipuLLM,
     DeepSeekLLM,
 )

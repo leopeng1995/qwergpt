@@ -2,7 +2,7 @@ from abc import ABC
 
 from tenacity import retry, stop_after_attempt, retry_if_exception
 
-from qwergpt.llm import ZhipuLLM
+from qwergpt.llms import ZhipuLLM
 from qwergpt.schema import Message
 from qwergpt.utils import should_retry
 

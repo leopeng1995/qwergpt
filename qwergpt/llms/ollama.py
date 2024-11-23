@@ -10,8 +10,8 @@ import asyncio
 import requests
 
 from qwergpt.schema import Message
-from qwergpt.llm.base import LLM
-from qwergpt.llm.errors import LLMAPIUnknownError
+from qwergpt.llms.base import LLM
+from qwergpt.llms.errors import LLMAPIUnknownError
 
 
 class OllamaLLM(LLM):

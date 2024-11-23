@@ -11,8 +11,8 @@ import asyncio
 import requests
 
 from qwergpt.schema import Message
-from qwergpt.llm.base import LLM
-from qwergpt.llm.errors import (
+from qwergpt.llms.base import LLM
+from qwergpt.llms.errors import (
     LLMBalanceDepletionError,
     LLMAPIOverload,
     LLMAPIUnknownError,
