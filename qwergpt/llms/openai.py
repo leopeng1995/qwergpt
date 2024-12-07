@@ -37,10 +37,10 @@ class OpenAILLM(LLM):
                 cls._semaphore = asyncio.Semaphore(cls._max_concurrent)
         return cls._semaphore
 
-    def __init__(self, model_name='gpt-4o-mini', max_concurrent=20, base_url='https://openai.com/v1/chat/completions') -> None:
+    def __init__(self, model='gpt-4o-mini', max_concurrent=20, base_url='https://openai.com/v1/chat/completions') -> None:
         super().__init__("OpenAILLM")
         self.api_key = os.getenv('OPENAI_API_KEY')
-        self.model_name = model_name
+        self.model = model
         self.API_URL = base_url
         self.__class__._max_concurrent = max_concurrent
         self.__class__._semaphore = None  # 重置信号量，让它在下次获取时使用新的并发值
@@ -53,7 +53,7 @@ class OpenAILLM(LLM):
 
     def _prepare_request_data(self, messages: List[Message], max_tokens: int, stream: bool = False) -> dict:
         request_data = {
-            "model": self.model_name,
+            "model": self.model,
             "messages": [{"role": msg.role, "content": msg.content} for msg in messages],
             "stream": stream,
         }

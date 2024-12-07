@@ -27,10 +27,10 @@ class DeepSeekLLM(LLM):
                 cls._semaphore = asyncio.Semaphore(20)
         return cls._semaphore
 
-    def __init__(self, model_name='deepseek-chat') -> None:
+    def __init__(self, model='deepseek-chat') -> None:
         super().__init__("DeepSeekLLM")
         self.api_key = os.getenv('DEEPSEEK_API_KEY')
-        self.model_name = model_name
+        self.model = model
 
     def _get_headers(self):
         return {
@@ -40,7 +40,7 @@ class DeepSeekLLM(LLM):
 
     def _prepare_request_data(self, messages: List[Message], max_tokens: int, stream: bool = False, tools: List[ToolDef] = None) -> dict:
         request_data = {
-            "model": self.model_name,
+            "model": self.model,
             "messages": [msg.model_dump() for msg in messages],
             "stream": stream,
             "max_tokens": max_tokens,

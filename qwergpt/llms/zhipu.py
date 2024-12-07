@@ -37,10 +37,10 @@ class ZhipuLLM(LLM):
                 cls._semaphore = asyncio.Semaphore(cls._max_concurrent)
         return cls._semaphore
 
-    def __init__(self, model_name='glm-4-air', max_concurrent=20) -> None:
+    def __init__(self, model='glm-4-air', max_concurrent=20) -> None:
         super().__init__("ZhipuLLM")
         self.api_key = os.getenv('ZHIPUAI_API_KEY')
-        self.model_name = model_name
+        self.model = model
         self.__class__._max_concurrent = max_concurrent
         self.__class__._semaphore = None  # 重置信号量，让它在下次获取时使用新的并发值
 
@@ -52,7 +52,7 @@ class ZhipuLLM(LLM):
 
     def _prepare_request_data(self, messages: List[Message], max_tokens: int, stream: bool = False) -> dict:
         request_data = {
-            "model": self.model_name,
+            "model": self.model,
             "messages": [{"role": msg.role, "content": msg.content} for msg in messages],
             "stream": stream,
         }

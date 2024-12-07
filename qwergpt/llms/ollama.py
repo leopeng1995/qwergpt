@@ -25,9 +25,9 @@ class OllamaLLM(LLM):
                 cls._semaphore = asyncio.Semaphore(20)
         return cls._semaphore
 
-    def __init__(self, model_name='llama3', base_url='http://localhost:11434/api/generate') -> None:
+    def __init__(self, model='llama3', base_url='http://localhost:11434/api/generate') -> None:
         super().__init__("OllamaLLM")
-        self.model_name = model_name
+        self.model = model
         self.base_url = base_url
 
     def _get_headers(self):
@@ -38,7 +38,7 @@ class OllamaLLM(LLM):
     def _prepare_request_data(self, messages: List[Message], max_tokens: int, stream: bool = False, context_window: int = 2048) -> dict:
         prompt = messages[-1].content
         return {
-            "model": self.model_name,
+            "model": self.model,
             "prompt": prompt,
             "stream": stream,
             "max_tokens": max_tokens,

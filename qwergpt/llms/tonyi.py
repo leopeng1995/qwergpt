@@ -33,9 +33,9 @@ class TongyiLLM(LLM):
                 cls._semaphore = asyncio.Semaphore(20)
         return cls._semaphore
 
-    def __init__(self, model_name='qwen-turbo') -> None:
+    def __init__(self, model='qwen-turbo') -> None:
         self.api_key = os.getenv('DASHSCOPE_API_KEY')
-        self.model_name = model_name
+        self.model = model
 
     def _get_headers(self):
         return {
@@ -45,7 +45,7 @@ class TongyiLLM(LLM):
 
     def _prepare_request_data(self, messages: List[Message], max_tokens: int, stream: bool = False) -> dict:
         return {
-            "model": self.model_name,
+            "model": self.model,
             "messages": [{"role": msg.role, "content": msg.content} for msg in messages],
             "stream": stream,
             "max_tokens": max_tokens,
