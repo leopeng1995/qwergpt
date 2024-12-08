@@ -24,7 +24,10 @@ class FaissVectorStore(VectorStore):
     def add_texts(self, texts: List[str], metadata: List[Dict] = None) -> Dict:
         vectors = self.embedder.embed(texts)
         vector_dimension = vectors.shape[1]
-        self.index = faiss.IndexFlatL2(vector_dimension)
+
+        if self.index is None:
+            self.index = faiss.IndexFlatL2(vector_dimension)
+        
         faiss.normalize_L2(vectors)
         self.index.add(vectors)
         
