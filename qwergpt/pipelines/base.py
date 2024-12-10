@@ -8,7 +8,11 @@ from typing import Dict, Any, Set, Callable, List
 
 @dataclass
 class PipelineData:
-    data: Dict[str, Any]
+    data: Dict[str, Any] = None
+
+    def __post_init__(self):
+        if self.data is None:
+            self.data = {}
     
     def get(self, key: str, default: Any = None) -> Any:
         return self.data.get(key, default)
@@ -65,10 +69,10 @@ class Pipeline(ABC):
     
     def notify_observers(self):
         status_data = {
-            'pipeline_id': self.id,
+            'pipelineId': self.id,
             'status': self.status.value,
             'components': self.components,
-            'pipeline_data': self.pipeline_data.to_dict() if self.pipeline_data else {}
+            'pipelineData': self.pipeline_data.to_dict() if self.pipeline_data else {}
         }
         status_json = json.dumps(status_data, ensure_ascii=False)
         
