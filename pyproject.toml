@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "qwergpt"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
     { name = "Leo Peng", email = "leo@promptcn.com" },
 ]
 description = "QwerGPT: A Lightweight LLM Framework"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -27,4 +27,4 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/promptcn/qwergpt"
+Homepage = "https://github.com/leopeng1995/qwergpt"
