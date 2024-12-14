@@ -1,3 +1,4 @@
+import inspect
 from dataclasses import dataclass
 from typing import Dict, List, Any, Callable
 
@@ -25,12 +26,16 @@ class PipelineEvaluator:
     def __init__(self, config: EvaluationConfig):
         self.config = config
         
-    def evaluate_step(self, step_name: str, predicted: Any, ground_truth: Any) -> Dict[str, float]:
+    async def evaluate_step(self, step_name: str, predicted: Any, ground_truth: Any) -> Dict[str, float]:
         step = self.config.get_step(step_name)
         if not step:
             return {}
+        
+        if inspect.iscoroutinefunction(step.metric_fn):
+            metrics = await step.metric_fn(predicted, ground_truth)
+        else:
+            metrics = step.metric_fn(predicted, ground_truth)
             
-        metrics = step.metric_fn(predicted, ground_truth)
         if metrics is None:
             return {}
             
