@@ -8,8 +8,8 @@ from qwergpt.llms import (
 
 
 class BaseRewriter(PipelineComponent):
-    def __init__(self, model_name: str = 'glm-4-air'):
-        self._llm = ZhipuLLM(model_name=model_name)
+    def __init__(self, model: str = 'glm-4-air'):
+        self._llm = ZhipuLLM(model=model)
 
     @abstractmethod
     def get_system_prompt(self) -> str:
