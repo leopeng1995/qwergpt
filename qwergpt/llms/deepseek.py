@@ -74,6 +74,9 @@ class DeepSeekLLM(LLM):
                 async with session.post(self.API_URL, headers=headers, json=data, timeout=timeout) as response:
                     res = await response.json()
 
+                if 'error' in res:
+                    raise Exception(res['error']['message'])
+
                 content = res['choices'][0]['message']['content']
                 return Message(role='assistant', content=content)
 
