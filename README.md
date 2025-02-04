@@ -11,5 +11,6 @@ A Lightweight Framework for building LLM applications.
 ### Quick Start
 
 ```
+pip install qwergpt
 cp .env.example .env
 ```
