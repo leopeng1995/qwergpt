@@ -64,8 +64,8 @@ class Plan(ABC):
 
 
 class BasePlanner(PipelineComponent):
-    def __init__(self, model_name: str = 'glm-4-air'):
-        self._llm: ZhipuLLM = ZhipuLLM(model_name=model_name)
+    def __init__(self, model: str = 'glm-4-air'):
+        self._llm: ZhipuLLM = ZhipuLLM(model=model)
 
     @retry(stop=stop_after_attempt(3), retry=retry_if_exception(should_retry))
     async def _get_instruction(self, messages: List[Message]) -> str:
